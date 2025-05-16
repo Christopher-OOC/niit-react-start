@@ -48,4 +48,8 @@ function useBooks(query) {
     },
     [query]
   );
+
+  return { books, isLoading, error };
 }
+
+export { useBooks };
