@@ -2,8 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-const style = { backgroundColor: "orangered", fontSize: "40px" };
-
 const users = [
   {
     id: 1,
@@ -48,30 +46,6 @@ const users = [
 ];
 
 function App() {
-  const nums = {
-    a: 23,
-    b: 57,
-    c: 98,
-  };
-
-  const { a, b, c } = nums;
-
-  console.log("a b c", a, b, c);
-
-  // const numbers = [1, 2, 3, 4, 5, 6];
-
-  // const numTwice = [];
-
-  // for (let i = 0; i < numbers.length; i++) {
-  //   numTwice[i] = numbers[i] * 2;
-  // }
-
-  // const map = numbers.map((num) => num * 2).filter((num) => num > 8).
-
-  // console.log("numbers", numbers);
-  // console.log("numTwice", numTwice);
-  // console.log("map", map);
-
   return (
     <div>
       <Header />
@@ -108,8 +82,6 @@ function NavLinks() {
     </ul>
   );
 }
-
-const numbers = [1, 2, 3, 4];
 
 function Main() {
   return (
@@ -161,16 +133,6 @@ function Footer() {
     </table>
   );
 }
-
-// function App() {
-//   return (
-//     <div style={style}>
-//       <h1 className="message">Welcome to React!</h1>
-//       <h2>This is great. </h2>
-//       <span>Time: {new Date().toDateString()}</span>
-//     </div>
-//   );
-// }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
