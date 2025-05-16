@@ -51,6 +51,7 @@ body {
   max-width: 80vw;
   display: flex;
   gap: 2rem;
+  flex-wrap: wrap;
 }
 
 .user {

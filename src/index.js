@@ -1,49 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-
-const users = [
-  {
-    id: 1,
-    name: "John Doe",
-    dateOf: "2000-12-3",
-    image: "https://i.pravatar.cc/4566?u=9876",
-    origin: "Nigeria",
-    phoneNumber: "+2349023244556",
-  },
-  {
-    id: 2,
-    name: "Phillip Cool",
-    dateOf: "2005-8-13",
-    image: "https://i.pravatar.cc/4566?u=56799",
-    origin: "England",
-    phoneNumber: "+29023244556",
-  },
-  {
-    id: 3,
-    name: "Ramesh Ravi",
-    dateOf: "2003-3-27",
-    image: "https://i.pravatar.cc/4566?u=45678",
-    origin: "India",
-    phoneNumber: "+803244556",
-  },
-  {
-    id: 4,
-    name: "Martins Orel",
-    dateOf: "2005-8-13",
-    image: "https://i.pravatar.cc/4566?u=97699",
-    origin: "Scotland",
-    phoneNumber: "+290098567856",
-  },
-  {
-    id: 3,
-    name: "Zhou Shi",
-    dateOf: "2010-3-4",
-    image: "https://i.pravatar.cc/4566?u=64678",
-    origin: "China",
-    phoneNumber: "+803244556",
-  },
-];
 
 function App() {
   return (
@@ -83,32 +40,98 @@ function NavLinks() {
   );
 }
 
+const url = "https://openlibrary.org/search.json?q=";
+const headers = new Headers({
+  "User-Agent": "Test/1.0 (olojedechristopher24@gmail.com)",
+});
+
 function Main() {
+  const [books, setBooks] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [search, setSearch] = useState("ja");
+
+  useEffect(
+    function () {
+      const controller = new AbortController();
+      const options = {
+        method: "GET",
+        headers: headers,
+        signal: controller.signal,
+      };
+
+      async function fetchBooks() {
+        try {
+          setIsLoading(true);
+          setError("");
+          const res = await fetch(url + search, options);
+
+          if (!res.ok) {
+            console.log("error");
+            throw new Error("Error occurs!");
+          }
+
+          const data = await res.json();
+          console.log(data);
+          setBooks(data.docs);
+          setError("");
+          setIsLoading(false);
+        } catch (error) {
+          if (error.name !== "AbortError") {
+            console.log(error.name);
+            setError(error.message);
+          }
+        } finally {
+          setIsLoading(false);
+        }
+      }
+
+      fetchBooks();
+
+      return () => controller.abort();
+    },
+    [search]
+  );
+
+  function searchBooks(query) {
+    setSearch(query);
+  }
+
   return (
     <div className="main">
-      <ul className="user__container">
-        {users.map((user) => (
-          <User user={user} school={"school"} />
-        ))}
-      </ul>
+      <div style={{ margin: "3rem 0" }}>
+        {isLoading && <p>Loading {isLoading}</p>}
+        <form>
+          <label style={{ margin: "0 3rem" }}>Search</label>
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => searchBooks(e.target.value)}
+          />
+        </form>
+      </div>
+
+      {error && <p>{error}</p>}
+      {!isLoading && !error && (
+        <ul className="user__container">
+          {books.map((book) => (
+            <Book book={book} key={book.title + book.first_publish_year} />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
 
-function User({ user }) {
+function Book({ book }) {
   return (
     <li className="user">
-      <img className="user__image" src={user.image} alt="user-image" />
-      <h4>ID: {user.id}</h4>
-      <p>Name: {user.name}</p>
-      <p>Date of Birth: {user.dateOf}</p>
-      <p>
-        Origin: {user.origin}{" "}
-        {user.origin === "Nigeria" && (
-          <span style={{ backgroundColor: "green" }}>Idan</span>
-        )}
-      </p>
-      <p>Phone Number: {user.phoneNumber}</p>
+      {/* <img className="user__image" src={user.image} alt="user-image" /> */}
+      {/* <h4>ID: {user.id}</h4> */}
+      <p>Author Name: {book.author_name ? book.author_name[0] : "unknown"}</p>
+      <p>Book Title: {book.title}</p>
+      <p>first_publish_year: {book.first_publish_year}</p>
+      {/* <p>Language: {book.language[0]}</p> */}
     </li>
   );
 }
