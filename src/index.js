@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
+import { useBooks } from "./useBooks";
+import Calculator from "./Calculator";
 
 function App() {
   return (
@@ -42,6 +44,7 @@ function NavLinks() {
 
 function Main() {
   const [search, setSearch] = useState("ja");
+  const { books, isLoading, error } = useBooks(search);
 
   function searchBooks(query) {
     setSearch(query);
@@ -110,6 +113,7 @@ function Footer() {
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
+    <Calculator />
   </React.StrictMode>
 );

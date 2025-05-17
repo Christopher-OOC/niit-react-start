@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-function useBooks(query) {
+export function useBooks(query) {
   const [books, setBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -20,6 +20,7 @@ function useBooks(query) {
 
       async function fetchBooks() {
         try {
+          setIsLoading(true);
           const res = await fetch(url + query, options);
 
           if (!res.ok) {
@@ -31,7 +32,6 @@ function useBooks(query) {
           console.log(data);
           setBooks(data.docs);
           setError("");
-          setIsLoading(false);
         } catch (error) {
           if (error.name !== "AbortError") {
             console.log(error.name);
@@ -51,5 +51,3 @@ function useBooks(query) {
 
   return { books, isLoading, error };
 }
-
-export { useBooks };
