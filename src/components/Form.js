@@ -5,7 +5,7 @@ export default function Form() {
   const [content, setContent] = useState("");
 
   return (
-    <form>
+    <form className="form">
       <p>Please fill the info to create a new todo</p>
       <div>
         <label>Title: </label>
